@@ -32,4 +32,30 @@ fn print_usage(program: &str, opts: getopts::Options) {
 }
 
 fn main() {
+    let args : Vec<String> = std::env::args().collect();
+
+    let program = args[0].clone();
+
+    let mut opts = getopts::Options::new();
+    opts.optflag("h", "help", "print help");
+    opts.optflag("c", "cards", "print available cards");
+    opts.optflag("r", "rawmidis", "print available raw midi controllers");
+
+    let matches = match opts.parse(&args[1..]) {
+        Ok(m) => { m },
+        Err(e) => { panic!(e.to_string()) }
+    };
+
+    if matches.opt_present("h") {
+        print_usage(&program, opts);
+        return;
+    }
+
+    if matches.opt_present("c") {
+        print_cards();
+    }
+
+    if matches.opt_present("r") {
+        print_rawmidis();
+    }
 }
