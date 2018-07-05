@@ -25,5 +25,11 @@ fn print_rawmidis() {
         }
     }
 }
+
+fn print_usage(program: &str, opts: getopts::Options) {
+    let brief = format!("Usage: {} [options]", program);
+    print!("{}", opts.usage(&brief));
+}
+
 fn main() {
 }
