@@ -42,8 +42,6 @@ fn print_sysex(name: &str, buf: &[u8]) {
 }
 
 fn send_sysex(name: &str, buf: &[u8]) {
-    // TODO check input
-
     let rawmidi = 
         match alsa::rawmidi::Rawmidi::new(name, alsa::Direction::Playback, false) {
             Ok(rawmidi) => { rawmidi },
