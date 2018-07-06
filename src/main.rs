@@ -33,18 +33,12 @@ fn print_usage(program: &str, opts: getopts::Options) {
 }
 
 fn print_sysex(name: &str, buf: &[u8]) {
-    let rawmidi = 
-        match std::fs::File::create("/tmp/out.bin") {
-            Ok(rawmidi) => { rawmidi },
-            Err(e) => { panic!(e) }
-        };
-
-    let mut writer = std::io::BufWriter::new(rawmidi);
-
-    match writer.write(buf) {
-        Ok(n) => { println!("{}: written {} bytes of {}", name, n, buf.len()) },
-        Err(e) => { panic!(e.to_string()) }
-    };
+    
+    print!("{}:", name);
+    for i in buf {
+        print!{" {:02X}", i}
+    }
+    println!("");
 }
 
 fn send_sysex(name: &str, buf: &[u8]) {
