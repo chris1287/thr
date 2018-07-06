@@ -104,6 +104,18 @@ fn get_knob(name: &str) -> u8 {
     }
 }
 
+fn get_cabinet(name: &str) -> u8 {
+    match name {
+        "usa4x12" => 0,
+        "usa2x12" => 1,
+        "brit4x12" => 2,
+        "brit2x12" => 3,
+        "cab4x12" => 4,
+        "cab1x12" => 5,
+        _ => panic!("unrecognized cabinet: {}", name)
+    }
+}
+
 fn main() {
     let args : Vec<String> = std::env::args().collect();
 
@@ -121,6 +133,7 @@ fn main() {
     opts.optopt("b", "bass", "set bass", "[0-99]");
     opts.optopt("i", "middle", "set middle", "[0-99]");
     opts.optopt("t", "treble", "set treble", "[0-99]");
+    opts.optopt("n", "cabinet", "set cabinet", "[usa4x12, usa2x12, brit4x12, brit2x12, cab4x12, cab1x12]");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
@@ -179,6 +192,12 @@ fn main() {
     let treble = matches.opt_str("t");
     match treble {
         Some(x) => send_command(device_name.as_ref(), &get_knob("treble"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
+        None => {}
+    };
+
+    let cabinet = matches.opt_str("n"); 
+    match cabinet {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("cabinet"), &get_cabinet(x.as_ref()), matches.opt_present("d")),
         None => {}
     };
 }
