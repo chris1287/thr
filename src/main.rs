@@ -116,6 +116,7 @@ fn main() {
     opts.optflag("d", "dryrun", "do not send sysex to device");
     opts.optopt("s", "select", "select raw midi controller", "hw:?,?,?");
     opts.optopt("a", "amplifier", "set amplifier", "[clean, crunch, lead, brit, modern, bass, aco, flat]");
+    opts.optopt("g", "gain", "set gain", "[0-99]");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
@@ -144,6 +145,12 @@ fn main() {
     let amplifier = matches.opt_str("a"); 
     match amplifier {
         Some(x) => send_command(device_name.as_ref(), &get_knob("amplifier"), &get_amplifier(x.as_ref()), matches.opt_present("d")),
+        None => {}
+    };
+
+    let gain = matches.opt_str("g");
+    match gain {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("gain"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
         None => {}
     };
 }
