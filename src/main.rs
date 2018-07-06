@@ -118,6 +118,7 @@ fn main() {
     opts.optopt("a", "amplifier", "set amplifier", "[clean, crunch, lead, brit, modern, bass, aco, flat]");
     opts.optopt("g", "gain", "set gain", "[0-99]");
     opts.optopt("m", "master", "set master", "[0-99]");
+    opts.optopt("b", "bass", "set bass", "[0-99]");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
@@ -158,6 +159,12 @@ fn main() {
     let master = matches.opt_str("m");
     match master {
         Some(x) => send_command(device_name.as_ref(), &get_knob("master"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
+        None => {}
+    };
+
+    let bass = matches.opt_str("b");
+    match bass {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("bass"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
         None => {}
     };
 }
