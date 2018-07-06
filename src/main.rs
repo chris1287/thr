@@ -40,6 +40,9 @@ fn main() {
     opts.optflag("h", "help", "print help");
     opts.optflag("c", "cards", "print available cards");
     opts.optflag("r", "rawmidis", "print available raw midi controllers");
+    opts.optflag("d", "dryrun", "do not send sysex to device");
+    opts.optopt("s", "select", "select raw midi controller", "hw:?,?,?");
+    opts.optopt("a", "amplifier", "set amplifier", "[clean, crunch, lead, brit, modern, bass, aco, flat]");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
