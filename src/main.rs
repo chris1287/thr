@@ -1,5 +1,6 @@
 extern crate alsa;
 extern crate getopts;
+use std::io::Write;
 
 fn print_cards() {
     let card_iterator = alsa::card::Iter::new();
@@ -29,6 +30,78 @@ fn print_rawmidis() {
 fn print_usage(program: &str, opts: getopts::Options) {
     let brief = format!("Usage: {} [options]", program);
     print!("{}", opts.usage(&brief));
+}
+
+fn print_sysex(name: &str, buf: &[u8]) {
+    let rawmidi = 
+        match std::fs::File::create("/tmp/out.bin") {
+            Ok(rawmidi) => { rawmidi },
+            Err(e) => { panic!(e) }
+        };
+
+    let mut writer = std::io::BufWriter::new(rawmidi);
+
+    match writer.write(buf) {
+        Ok(n) => { println!("{}: written {} bytes of {}", name, n, buf.len()) },
+        Err(e) => { panic!(e.to_string()) }
+    };
+}
+
+fn send_sysex(name: &str, buf: &[u8]) {
+    // TODO check input
+
+    let rawmidi = 
+        match alsa::rawmidi::Rawmidi::new(name, alsa::Direction::Playback, false) {
+            Ok(rawmidi) => { rawmidi },
+            Err(e) => { panic!(e) }
+        };
+
+    let mut writer = rawmidi.io();
+
+    match writer.write(buf) {
+        Ok(n) => { println!("{}: written {} bytes of {}", name, n, buf.len()) },
+        Err(e) => { panic!(e.to_string()) }
+    };
+}
+
+fn send_command(name: &str, knob: &u8, value: &u8, dry: bool) {
+    let sysex_set: [u8; 11] = [
+        0xF0, 0x43, 0x7D, 0x10, 0x41, 0x30, 0x01,
+        *knob, 0x00, *value,
+        0xF7];
+
+    if dry {
+        print_sysex(name, &sysex_set);
+    } else {
+        send_sysex(name, &sysex_set);
+    }
+}
+
+fn get_amplifier(name: &str) -> u8 {
+    match name {
+        "clean" => 0,
+        "crunch" => 1,
+        "lead" => 2,
+        "brit" => 3,
+        "modern" => 4,
+        "bass" => 5,
+        "aco" => 6,
+        "flat" => 7,
+        _ => panic!("unrecognized amplifier: {}", name)
+    }
+}
+
+fn get_knob(name: &str) -> u8 {
+    match name {
+        "amplifier" => 0,
+        "gain" => 1,
+        "master" => 2,
+        "bass" => 3,
+        "middle" => 4,
+        "treble" => 5,
+        "cabinet" => 6,
+        _ => panic!("unrecognized knob: {}", name)
+    }
 }
 
 fn main() {
@@ -61,4 +134,16 @@ fn main() {
     if matches.opt_present("r") {
         print_rawmidis();
     }
+
+    let device_name = matches.opt_str("s");
+    let device_name = match device_name {
+        Some(x) => x,
+        None => String::from("")
+    };
+
+    let amplifier = matches.opt_str("a"); 
+    match amplifier {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("amplifier"), &get_amplifier(x.as_ref()), matches.opt_present("d")),
+        None => {}
+    };
 }
