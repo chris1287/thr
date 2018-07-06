@@ -120,6 +120,7 @@ fn main() {
     opts.optopt("m", "master", "set master", "[0-99]");
     opts.optopt("b", "bass", "set bass", "[0-99]");
     opts.optopt("i", "middle", "set middle", "[0-99]");
+    opts.optopt("t", "treble", "set treble", "[0-99]");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
@@ -172,6 +173,12 @@ fn main() {
     let middle = matches.opt_str("i");
     match middle {
         Some(x) => send_command(device_name.as_ref(), &get_knob("middle"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
+        None => {}
+    };
+
+    let treble = matches.opt_str("t");
+    match treble {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("treble"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
         None => {}
     };
 }
