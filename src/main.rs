@@ -1,6 +1,9 @@
 extern crate alsa;
 extern crate getopts;
+
 use std::io::Write;
+use std::fs::File;
+use std::io::prelude::Read;
 
 fn print_cards() {
     let card_iterator = alsa::card::Iter::new();
@@ -108,6 +111,51 @@ fn get_cabinet(name: &str) -> u8 {
     }
 }
 
+fn load_file(device_name: &str, file_name: &str, dry: bool) {
+    let header: [u8; 18] = [
+        0xF0, 0x43, 0x7D, 0x00,
+        0x02,
+        0x0C,
+        b'D', b'T', b'A', b'1', b'A', b'l', b'l', b'P', 0x00, 0x00, 0x7F, 0x7F
+    ];
+
+    let mut file_content = [0; 265];
+
+    let mut file_handler = match File::open(file_name) {
+        Ok(file_handler) => file_handler,
+        Err(e) => panic!(e.to_string())
+    };
+
+    match file_handler.read(&mut file_content) {
+        Ok(x) => println!("read {} bytes from {}", x, file_name),
+        Err(e) => panic!(e)
+    };
+
+    let file_content = &file_content[9..];
+
+    let hcrc: u32 = header[6..].iter().map(|&x| x as u32).sum();
+    let fcrc: u32 = file_content.iter().map(|&x| x as u32).sum();
+    let mut crc: u32 = hcrc + fcrc;
+    crc = (!crc + 1) & 0x7F;
+
+    let mut sysex:Vec<u8> = Vec::new();
+    sysex.extend_from_slice(&header);
+    sysex.extend_from_slice(&file_content);
+    sysex.push(crc as u8);
+    sysex.push(0xF7);
+
+    if dry {
+        println!("{} {}", device_name, file_name);
+
+        for i in sysex.iter() {
+            print!{" {:02X}", i}
+        }
+        println!("");
+    } else {
+        send_sysex(&device_name, &sysex);
+    }
+}
+
 fn main() {
     let args : Vec<String> = std::env::args().collect();
 
@@ -126,6 +174,7 @@ fn main() {
     opts.optopt("i", "middle", "set middle", "[0-99]");
     opts.optopt("t", "treble", "set treble", "[0-99]");
     opts.optopt("n", "cabinet", "set cabinet", "[usa4x12, usa2x12, brit4x12, brit2x12, cab4x12, cab1x12]");
+    opts.optopt("f", "file", "load file", "file name");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
@@ -190,6 +239,12 @@ fn main() {
     let cabinet = matches.opt_str("n"); 
     match cabinet {
         Some(x) => send_command(device_name.as_ref(), &get_knob("cabinet"), &get_cabinet(x.as_ref()), matches.opt_present("d")),
+        None => {}
+    };
+
+    let file = matches.opt_str("f"); 
+    match file {
+        Some(x) => load_file(device_name.as_ref(), &x, matches.opt_present("d")),
         None => {}
     };
 }
