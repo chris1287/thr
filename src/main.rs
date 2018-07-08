@@ -162,89 +162,90 @@ fn main() {
     let program = args[0].clone();
 
     let mut opts = getopts::Options::new();
-    opts.optflag("h", "help", "print help");
-    opts.optflag("c", "cards", "print available cards");
-    opts.optflag("r", "rawmidis", "print available raw midi controllers");
-    opts.optflag("d", "dryrun", "do not send sysex to device");
-    opts.optopt("s", "select", "select raw midi controller", "hw:?,?,?");
-    opts.optopt("a", "amplifier", "set amplifier", "[clean, crunch, lead, brit, modern, bass, aco, flat]");
-    opts.optopt("g", "gain", "set gain", "[0-99]");
-    opts.optopt("m", "master", "set master", "[0-99]");
-    opts.optopt("b", "bass", "set bass", "[0-99]");
-    opts.optopt("i", "middle", "set middle", "[0-99]");
-    opts.optopt("t", "treble", "set treble", "[0-99]");
-    opts.optopt("n", "cabinet", "set cabinet", "[usa4x12, usa2x12, brit4x12, brit2x12, cab1x12, cab4x10]");
-    opts.optopt("f", "file", "load file", "file name");
+    opts.long_only(true);
+    opts.optflag("", "help", "print help");
+    opts.optflag("", "cards", "print available cards");
+    opts.optflag("", "rawmidis", "print available raw midi controllers");
+    opts.optflag("", "dryrun", "do not send sysex to device");
+    opts.optopt("", "select", "select raw midi controller", "[hw:?,?,?]");
+    opts.optopt("", "amplifier", "set amplifier", "[clean, crunch, lead, brit, modern, bass, aco, flat]");
+    opts.optopt("", "gain", "set gain", "[0-99]");
+    opts.optopt("", "master", "set master", "[0-99]");
+    opts.optopt("", "bass", "set bass", "[0-99]");
+    opts.optopt("", "middle", "set middle", "[0-99]");
+    opts.optopt("", "treble", "set treble", "[0-99]");
+    opts.optopt("", "cabinet", "set cabinet", "[usa4x12, usa2x12, brit4x12, brit2x12, cab1x12, cab4x10]");
+    opts.optopt("", "file", "load file", "[file name]");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
         Err(e) => { panic!(e.to_string()) }
     };
 
-    if matches.opt_present("h") {
+    if matches.opt_present("help") {
         print_usage(&program, opts);
         return;
     }
 
-    if matches.opt_present("c") {
+    if matches.opt_present("cards") {
         print_cards();
     }
 
-    if matches.opt_present("r") {
+    if matches.opt_present("rawmidis") {
         print_rawmidis();
     }
 
-    let device_name = matches.opt_str("s");
+    let device_name = matches.opt_str("select");
     let device_name = match device_name {
         Some(x) => x,
         None => String::from("")
     };
 
-    let amplifier = matches.opt_str("a"); 
+    let amplifier = matches.opt_str("amplifier"); 
     match amplifier {
-        Some(x) => send_command(device_name.as_ref(), &get_knob("amplifier"), &get_amplifier(x.as_ref()), matches.opt_present("d")),
+        Some(x) => send_command(device_name.as_ref(), &get_knob("amplifier"), &get_amplifier(x.as_ref()), matches.opt_present("dryrun")),
         None => {}
     };
 
-    let gain = matches.opt_str("g");
+    let gain = matches.opt_str("gain");
     match gain {
-        Some(x) => send_command(device_name.as_ref(), &get_knob("gain"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
+        Some(x) => send_command(device_name.as_ref(), &get_knob("gain"), &x.parse::<u8>().unwrap(), matches.opt_present("dryrun")),
         None => {}
     };
 
-    let master = matches.opt_str("m");
+    let master = matches.opt_str("master");
     match master {
-        Some(x) => send_command(device_name.as_ref(), &get_knob("master"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
+        Some(x) => send_command(device_name.as_ref(), &get_knob("master"), &x.parse::<u8>().unwrap(), matches.opt_present("dryrun")),
         None => {}
     };
 
-    let bass = matches.opt_str("b");
+    let bass = matches.opt_str("bass");
     match bass {
-        Some(x) => send_command(device_name.as_ref(), &get_knob("bass"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
+        Some(x) => send_command(device_name.as_ref(), &get_knob("bass"), &x.parse::<u8>().unwrap(), matches.opt_present("dryrun")),
         None => {}
     };
 
-    let middle = matches.opt_str("i");
+    let middle = matches.opt_str("middle");
     match middle {
-        Some(x) => send_command(device_name.as_ref(), &get_knob("middle"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
+        Some(x) => send_command(device_name.as_ref(), &get_knob("middle"), &x.parse::<u8>().unwrap(), matches.opt_present("dryrun")),
         None => {}
     };
 
-    let treble = matches.opt_str("t");
+    let treble = matches.opt_str("treble");
     match treble {
-        Some(x) => send_command(device_name.as_ref(), &get_knob("treble"), &x.parse::<u8>().unwrap(), matches.opt_present("d")),
+        Some(x) => send_command(device_name.as_ref(), &get_knob("treble"), &x.parse::<u8>().unwrap(), matches.opt_present("dryrun")),
         None => {}
     };
 
-    let cabinet = matches.opt_str("n"); 
+    let cabinet = matches.opt_str("cabinet"); 
     match cabinet {
-        Some(x) => send_command(device_name.as_ref(), &get_knob("cabinet"), &get_cabinet(x.as_ref()), matches.opt_present("d")),
+        Some(x) => send_command(device_name.as_ref(), &get_knob("cabinet"), &get_cabinet(x.as_ref()), matches.opt_present("dryrun")),
         None => {}
     };
 
-    let file = matches.opt_str("f"); 
+    let file = matches.opt_str("file"); 
     match file {
-        Some(x) => load_file(device_name.as_ref(), &x, matches.opt_present("d")),
+        Some(x) => load_file(device_name.as_ref(), &x, matches.opt_present("dryrun")),
         None => {}
     };
 }
