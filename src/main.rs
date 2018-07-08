@@ -105,8 +105,8 @@ fn get_cabinet(name: &str) -> u8 {
         "usa2x12" => 1,
         "brit4x12" => 2,
         "brit2x12" => 3,
-        "cab4x12" => 4,
-        "cab1x12" => 5,
+        "cab1x12" => 4,
+        "cab4x10" => 5,
         _ => panic!("unrecognized cabinet: {}", name)
     }
 }
@@ -173,7 +173,7 @@ fn main() {
     opts.optopt("b", "bass", "set bass", "[0-99]");
     opts.optopt("i", "middle", "set middle", "[0-99]");
     opts.optopt("t", "treble", "set treble", "[0-99]");
-    opts.optopt("n", "cabinet", "set cabinet", "[usa4x12, usa2x12, brit4x12, brit2x12, cab4x12, cab1x12]");
+    opts.optopt("n", "cabinet", "set cabinet", "[usa4x12, usa2x12, brit4x12, brit2x12, cab1x12, cab4x10]");
     opts.optopt("f", "file", "load file", "file name");
 
     let matches = match opts.parse(&args[1..]) {
