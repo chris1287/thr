@@ -124,6 +124,12 @@ fn get_knob(name: &str) -> u8 {
         "phaser-manual"    => 0x22,
         "phaser-depth"     => 0x23,
         "phaser-feedback"  => 0x24,
+        "delay"            => 0x3F,
+        "delay-time"       => 0x31,
+        "delay-feedback"   => 0x33,
+        "delay-hcut"       => 0x34,
+        "delay-lcut"       => 0x36,
+        "delay-level"      => 0x38,
         _ => panic!("unrecognized knob: {}", name)
     }
 }
@@ -200,6 +206,14 @@ fn get_modulation_selector(name: &str) -> u16 {
         "tremolo" => 0x02,
         "phaser" => 0x03,
         _ => panic!("unrecognized modulation selector: {}", name)
+    }
+}
+
+fn get_delay(name: &str) -> u16 {
+    match name {
+        "on" => 0x00,
+        "off" => 0x7F,
+        _ => panic!("unrecognized delay: {}", name)
     }
 }
 
@@ -297,6 +311,12 @@ fn main() {
     opts.optopt(""  , "phaser-manual"    , "set phaser manual"                      , "[0-100]");
     opts.optopt(""  , "phaser-depth"     , "set phaser depth"                       , "[0-100]");
     opts.optopt(""  , "phaser-feedback"  , "set phaser feedback"                    , "[0-100]");
+    opts.optopt(""  , "delay"            , "set delay"                              , "[on, off]");
+    opts.optopt(""  , "delay-time"       , "set delay time"                         , "[1-19983]");
+    opts.optopt(""  , "delay-feedback"   , "set delay feedback"                     , "[0-100]");
+    opts.optopt(""  , "delay-hcut"       , "set delay high cut"                     , "[1896-32001]");
+    opts.optopt(""  , "delay-lcut"       , "set delay low cut"                      , "[31-15936]");
+    opts.optopt(""  , "delay-level"      , "set delay level"                        , "[0-100]");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
@@ -543,6 +563,42 @@ fn main() {
     let x = matches.opt_str("phaser-feedback"); 
     match x {
         Some(x) => send_command(device_name.as_ref(), &get_knob("phaser-feedback"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("delay"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("delay"), &get_delay(x.as_ref()), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("delay-time"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("delay-time"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("delay-feedback"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("delay-feedback"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("delay-hcut"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("delay-hcut"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("delay-lcut"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("delay-lcut"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("delay-level"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("delay-level"), &x.parse::<u16>().unwrap(), dry),
         None => {}
     };
 
