@@ -130,6 +130,17 @@ fn get_knob(name: &str) -> u8 {
         "delay-hcut"       => 0x34,
         "delay-lcut"       => 0x36,
         "delay-level"      => 0x38,
+        "reverb"           => 0x4F,
+        "reverb-type"      => 0x40,
+        "reverb-time"      => 0x41,
+        "reverb-pre"       => 0x43,
+        "reverb-lcut"      => 0x45,
+        "reverb-hcut"      => 0x47,
+        "reverb-hratio"    => 0x49,
+        "reverb-lratio"    => 0x4A,
+        "reverb-level"     => 0x4B,
+        "spring-reverb"    => 0x41,
+        "spring-filter"    => 0x42,
         _ => panic!("unrecognized knob: {}", name)
     }
 }
@@ -214,6 +225,24 @@ fn get_delay(name: &str) -> u16 {
         "on" => 0x00,
         "off" => 0x7F,
         _ => panic!("unrecognized delay: {}", name)
+    }
+}
+
+fn get_reverb(name: &str) -> u16 {
+    match name {
+        "on" => 0x00,
+        "off" => 0x7F,
+        _ => panic!("unrecognized reverb: {}", name)
+    }
+}
+
+fn get_reverb_type(name: &str) -> u16 {
+    match name {
+        "room" => 0x01,
+        "plate" => 0x02,
+        "hall" => 0x00,
+        "spring" => 0x03,
+        _ => panic!("unrecognized reverb: {}", name)
     }
 }
 
@@ -315,8 +344,19 @@ fn main() {
     opts.optopt(""  , "delay-time"       , "set delay time"                         , "[1-19983]");
     opts.optopt(""  , "delay-feedback"   , "set delay feedback"                     , "[0-100]");
     opts.optopt(""  , "delay-hcut"       , "set delay high cut"                     , "[1896-32001]");
-    opts.optopt(""  , "delay-lcut"       , "set delay low cut"                      , "[31-15936]");
+    opts.optopt(""  , "delay-lcut"       , "set delay low cut"                      , "[21-15936]");
     opts.optopt(""  , "delay-level"      , "set delay level"                        , "[0-100]");
+    opts.optopt(""  , "reverb"           , "set reverb"                             , "[on, off]");
+    opts.optopt(""  , "reverb-type"      , "set reverb type"                        , "[room, plate, hall, spring]");
+    opts.optopt(""  , "reverb-time"      , "set reverb time"                        , "[3-328]");
+    opts.optopt(""  , "reverb-pre"       , "set reverb pre"                         , "[1-3920]");
+    opts.optopt(""  , "reverb-lcut"      , "set reverb low cut"                     , "[21-15936]");
+    opts.optopt(""  , "reverb-hcut"      , "set reverb high cut"                    , "[1896-32001]");
+    opts.optopt(""  , "reverb-hratio"    , "set reverb high ratio"                  , "[1-10]");
+    opts.optopt(""  , "reverb-lratio"    , "set reverb low ratio"                   , "[1-14]");
+    opts.optopt(""  , "reverb-level"     , "set reverb level"                       , "[0-100]");
+    opts.optopt(""  , "spring-reverb"    , "set spring reverb"                      , "[0-100]");
+    opts.optopt(""  , "spring-filter"    , "set spring filter"                      , "[0-100]");
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => { m },
@@ -599,6 +639,72 @@ fn main() {
     let x = matches.opt_str("delay-level"); 
     match x {
         Some(x) => send_command(device_name.as_ref(), &get_knob("delay-level"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb"), &get_reverb(x.as_ref()), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb-type"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb-type"), &get_reverb_type(x.as_ref()), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb-time"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb-time"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb-pre"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb-pre"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb-lcut"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb-lcut"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb-hcut"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb-hcut"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb-hratio"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb-hratio"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb-lratio"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb-lratio"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("reverb-level"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("reverb-level"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("spring-reverb"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("spring-reverb"), &x.parse::<u16>().unwrap(), dry),
+        None => {}
+    };
+
+    let x = matches.opt_str("spring-filter"); 
+    match x {
+        Some(x) => send_command(device_name.as_ref(), &get_knob("spring-filter"), &x.parse::<u16>().unwrap(), dry),
         None => {}
     };
 
