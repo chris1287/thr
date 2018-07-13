@@ -1,3 +1,8 @@
+pub fn get_u16(s: &str) -> u16 {
+    s.parse::<u16>().unwrap()
+}
+
+
 pub fn get_amplifier(name: &str) -> u16 {
     match name {
         "clean" => 0x00,
