@@ -1,9 +1,10 @@
 extern crate getopts;
-extern crate thr;
 
+mod thr;
+
+use thr::getters::*;
 use thr::sysex::*;
 use thr::ydp_interaction::*;
-use thr::getters::*;
 
 fn print_usage(program: &str, opts: getopts::Options) {
     let brief = format!("Usage: {} [options]", program);
@@ -28,7 +29,7 @@ fn main() {
         Option {short: "" , long: "middle"           , function: get_u16                 , description: "set middle"                    , domain: "[0-100]"},
         Option {short: "" , long: "treble"           , function: get_u16                 , description: "set treble"                    , domain: "[0-100]"},
         Option {short: "" , long: "cabinet"          , function: get_cabinet             , description: "set cabinet"                   , domain: "[usa4x12; usa2x12; brit4x12; brit2x12; cab1x12; cab4x10]"},
-        Option {short: "" , long: "gate"             , function: get_u16                 , description: "set gate"                      , domain: "[on; off]"},
+        Option {short: "" , long: "gate"             , function: get_gate                , description: "set gate"                      , domain: "[on; off]"},
         Option {short: "" , long: "gate-thr"         , function: get_u16                 , description: "set gate threshold"            , domain: "[0-100]"},
         Option {short: "" , long: "gate-rel"         , function: get_u16                 , description: "set gate release"              , domain: "[0-100]"},
         Option {short: "" , long: "compressor"       , function: get_compressor          , description: "set compressor"                , domain: "[on; off]"},

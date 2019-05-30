@@ -176,4 +176,3 @@ pub fn get_reverb_type(name: &str) -> u16 {
         _ => panic!("unrecognized reverb: {}", name)
     }
 }
-
