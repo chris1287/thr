@@ -6,12 +6,7 @@ authors = ["cristiano prato <cristiano.prato@gmail.com>"]
 [dependencies]
 alsa = "0.2.0"
 getopts = "0.2"
-ws = "0.8.1"
 
 [[bin]]
 name = "thrcli"
 path = "src/thrcli.rs"
-
-[[bin]]
-name = "thrd"
-path = "src/thrd.rs"
