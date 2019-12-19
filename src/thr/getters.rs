@@ -1,5 +1,5 @@
 pub fn get_u16(s: &str) -> u16 {
-    s.parse::<u16>().unwrap()
+    s.parse::<u16>().unwrap_or(0)
 }
 
 
@@ -13,7 +13,7 @@ pub fn get_amplifier(name: &str) -> u16 {
         "bass" => 0x05,
         "aco" => 0x06,
         "flat" => 0x07,
-        _ => panic!("unrecognized amplifier: {}", name)
+        _ => 0x00
     }
 }
 
@@ -72,7 +72,7 @@ pub fn get_knob(name: &str) -> u8 {
         "reverb-level"     => 0x4B,
         "spring-reverb"    => 0x41,
         "spring-filter"    => 0x42,
-        _ => panic!("unrecognized knob: {}", name)
+        _ => 0x00
     }
 }
 
@@ -84,7 +84,7 @@ pub fn get_cabinet(name: &str) -> u16 {
         "brit2x12" => 0x03,
         "cab1x12" => 0x04,
         "cab4x10" => 0x05,
-        _ => panic!("unrecognized cabinet: {}", name)
+        _ => 0x00
     }
 }
 
@@ -92,7 +92,7 @@ pub fn get_compressor(name: &str) -> u16 {
     match name {
         "on" => 0x00,
         "off" => 0x7F,
-        _ => panic!("unrecognized compressor: {}", name)
+        _ => 0x00
     }
 }
 
@@ -100,7 +100,7 @@ pub fn get_compressor_type(name: &str) -> u16 {
     match name {
         "stomp" => 0x00,
         "rack" => 0x01,
-        _ => panic!("unrecognized compressor type: {}", name)
+        _ => 0x00
     }
 }
 
@@ -108,7 +108,7 @@ pub fn get_gate(name: &str) -> u16 {
     match name {
         "on" => 0x00,
         "off" => 0x7F,
-        _ => panic!("unrecognized gate: {}", name)
+        _ => 0x00
     }
 }
 
@@ -117,7 +117,7 @@ pub fn get_knee(name: &str) -> u16 {
         "soft" => 0x00,
         "medium" => 0x01,
         "hard" => 0x02,
-        _ => panic!("unrecognized knee: {}", name)
+        _ => 0x00
     }
 }
 
@@ -129,7 +129,7 @@ pub fn get_ratio(name: &str) -> u16 {
         "1:12" => 0x03,
         "1:20" => 0x04,
         "1:inf" => 0x05,
-        _ => panic!("unrecognized ratio: {}", name)
+        _ => 0x00
     }
 }
 
@@ -137,7 +137,7 @@ pub fn get_modulation(name: &str) -> u16 {
     match name {
         "on" => 0x00,
         "off" => 0x7F,
-        _ => panic!("unrecognized modulation: {}", name)
+        _ => 0x00
     }
 }
 
@@ -147,7 +147,7 @@ pub fn get_modulation_selector(name: &str) -> u16 {
         "flanger" => 0x01,
         "tremolo" => 0x02,
         "phaser" => 0x03,
-        _ => panic!("unrecognized modulation selector: {}", name)
+        _ => 0x00
     }
 }
 
@@ -155,7 +155,7 @@ pub fn get_delay(name: &str) -> u16 {
     match name {
         "on" => 0x00,
         "off" => 0x7F,
-        _ => panic!("unrecognized delay: {}", name)
+        _ => 0x00
     }
 }
 
@@ -163,7 +163,7 @@ pub fn get_reverb(name: &str) -> u16 {
     match name {
         "on" => 0x00,
         "off" => 0x7F,
-        _ => panic!("unrecognized reverb: {}", name)
+        _ => 0x00
     }
 }
 
@@ -173,6 +173,6 @@ pub fn get_reverb_type(name: &str) -> u16 {
         "plate" => 0x02,
         "hall" => 0x00,
         "spring" => 0x03,
-        _ => panic!("unrecognized reverb: {}", name)
+        _ => 0x00
     }
 }
