@@ -10,7 +10,8 @@ pub fn print_sysex(buf: &[u8]) {
     println!("");
 }
 
-pub fn print_rawmidis() {
+#[no_mangle]
+pub extern fn print_rawmidis() {
     for card in alsa::card::Iter::new(){
         match card {
             Ok(card) => {
@@ -44,7 +45,8 @@ pub fn print_rawmidis() {
     }
 }
 
-pub fn send_sysex(name: &str, buf: &[u8]) -> Result<(), String> {
+#[no_mangle]
+pub extern fn send_sysex(name: &str, buf: &[u8]) -> Result<(), String> {
     match alsa::rawmidi::Rawmidi::new(name, alsa::Direction::Playback, false) {
         Ok(rawmidi) => {
             let mut writer = rawmidi.io();
@@ -64,7 +66,8 @@ pub fn send_sysex(name: &str, buf: &[u8]) -> Result<(), String> {
     }
 }
 
-pub fn send_command(name: &str, knob: &u8, value: &u16, dry: bool) -> Result<(), String> {
+#[no_mangle]
+pub extern fn send_command(name: &str, knob: &u8, value: &u16, dry: bool) -> Result<(), String> {
     let sysex_set: [u8; 11] = [
         0xF0, 0x43, 0x7D, 0x10, 0x41, 0x30, 0x01,
         *knob, (value >> 8) as u8, (value & 0xFF) as u8,

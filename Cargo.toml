@@ -10,3 +10,7 @@ getopts = "0.2"
 [[bin]]
 name = "thrcli"
 path = "src/thrcli.rs"
+
+[lib]
+name = "thr"
+crate-type = ["rlib", "dylib"]

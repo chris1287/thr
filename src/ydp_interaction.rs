@@ -1,7 +1,8 @@
 use std::fs::File;
 use std::io::prelude::Read;
 
-pub fn load_file(file_name: &str) -> Option<Vec<u8>> {
+#[no_mangle]
+pub extern fn load_file(file_name: &str) -> Option<Vec<u8>> {
     let header: [u8; 18] = [
         0xF0, 0x43, 0x7D, 0x00,
         0x02,

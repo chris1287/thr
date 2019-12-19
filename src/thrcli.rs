@@ -1,6 +1,5 @@
 extern crate getopts;
-
-mod thr;
+extern crate thr;
 
 use thr::getters::*;
 use thr::sysex::*;
