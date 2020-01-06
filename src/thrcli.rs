@@ -13,7 +13,7 @@ struct Option {
     pub domain: &'static str
 }
 
-static OPTIONS : &'static [Option] = &[
+static OPTIONS : &[Option] = &[
     Option {short: "" , long: "amplifier"        , function: get_amplifier           , description: "set amplifier"                 , domain: "[clean; crunch; lead; brit; modern; bass; aco; flat]"},
     Option {short: "" , long: "gain"             , function: get_u16                 , description: "set gain"                      , domain: "[0-100]"},
     Option {short: "" , long: "master"           , function: get_u16                 , description: "set master"                    , domain: "[0-100]"},
@@ -122,38 +122,32 @@ fn main() {
             }
 
             let cmd = matches.opt_str("file"); 
-            match cmd {
-                Some(x) => {
-                    match load_file(&x) {
-                        Some(sysex) => {
-                            if dry {
-                                print_sysex(&sysex);
-                            } else {
-                                match send_sysex(device_name.as_ref(), &sysex) {
-                                    Ok(()) => {},
-                                    Err(e) => { println!("{}", e); }
-                                }
+            if let Some(x) = cmd {
+                match load_file(&x) {
+                    Some(sysex) => {
+                        if dry {
+                            print_sysex(&sysex);
+                        } else {
+                            match send_sysex(device_name.as_ref(), &sysex) {
+                                Ok(()) => {},
+                                Err(e) => { println!("{}", e); }
                             }
-                        },
-                        None => {
-                            println!("invalid file");
                         }
-                    };
-                },
-                None => {}
+                    },
+                    None => {
+                        println!("invalid file");
+                    }
+                };
             };
 
             for o in OPTIONS {
                 let cmd = matches.opt_str(o.long); 
-                match cmd {
-                    Some(x) => {
-                        match send_command(device_name.as_ref(), &get_knob(o.long), &(o.function)(&x), dry) {
-                            Ok(()) => {},
-                            Err(e) => { println!("{}", e); }
-                        }
-                    },
-                    None => {}
-                };
+                if let Some(x) = cmd {
+                    match send_command(device_name.as_ref(), &get_knob(o.long), &(o.function)(&x), dry) {
+                        Ok(()) => {},
+                        Err(e) => { println!("{}", e); }
+                    };
+                }
             }
         },
         Err(e) => {

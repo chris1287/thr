@@ -1,17 +1,10 @@
 use std::io::Read;
 
-const KEEP_ALIVE : &'static [u8] = &[0xF0, 0x43, 0x7D, 0x60, 0x44, 0x54, 0x41, 0x31, 0xF7];
-const KNOB_TURN : &'static [u8] = &[0xF0, 0x43, 0x7D, 0x10, 0x41, 0x30, 0x01];
-
-fn dump_cmd(cmd : &[u8]) {
-    for i in cmd {
-        print!(" {:02X}", i);
-    }
-    println!("");
-}
+const KEEP_ALIVE : &[u8] = &[0xF0, 0x43, 0x7D, 0x60, 0x44, 0x54, 0x41, 0x31, 0xF7];
+const KNOB_TURN : &[u8] = &[0xF0, 0x43, 0x7D, 0x10, 0x41, 0x30, 0x01];
 
 fn is_keep_alive(cmd: &[u8]) -> bool {
-    return cmd == KEEP_ALIVE;
+    cmd == KEEP_ALIVE
 }
 
 fn is_knob_turn(cmd: &[u8]) -> bool {
@@ -19,7 +12,7 @@ fn is_knob_turn(cmd: &[u8]) -> bool {
         return false;
     }
 
-    return &cmd[0..KNOB_TURN.len()] == KNOB_TURN;
+    &cmd[0..KNOB_TURN.len()] == KNOB_TURN
 }
 
 fn dump_knob_turn(cmd : &[u8]) {
@@ -48,7 +41,7 @@ pub extern fn start(name: &str) -> Result<(), String> {
                             } else if is_knob_turn(&cmd) {
                                 dump_knob_turn(&cmd);
                             } else {
-                                dump_cmd(&cmd);
+                                ::sysex::print_sysex(&cmd);
                             }
                             cmd.clear();
                         }

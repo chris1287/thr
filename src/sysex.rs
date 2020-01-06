@@ -7,7 +7,7 @@ pub fn print_sysex(buf: &[u8]) {
     for i in buf {
         print!{" {:02X}", i}
     }
-    println!("");
+    println!();
 }
 
 #[no_mangle]
@@ -25,8 +25,8 @@ pub extern fn print_rawmidis() {
                                         card.get_index(),
                                         rawmidi.get_device(),
                                         rawmidi.get_subdevice(),
-                                        card.get_name().unwrap_or("".to_string()),
-                                        card.get_longname().unwrap_or("".to_string()));
+                                        card.get_name().unwrap_or_else(|_| "".to_string()),
+                                        card.get_longname().unwrap_or_else(|_| "".to_string()));
                                 },
                                 Err(e) => {
                                     println!("{}", e.to_string());
