@@ -116,8 +116,8 @@ fn main() {
 
             if matches.opt_present("monitor") {
                 match thr::main_loop::start(device_name.as_ref()) {
-                    Ok(_) => println!("main loop end"),
-                    Err(e) => println!("main loop error: {}", e)
+                    Ok(_) => {},
+                    Err(_) => {}
                 };
             }
 

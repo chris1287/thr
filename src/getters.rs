@@ -16,6 +16,20 @@ pub fn get_amplifier(name: &str) -> u16 {
     }
 }
 
+pub fn rev_amplifier(value: u8) -> &'static str {
+    match value {
+        0x00 => "clean",
+        0x01 => "crunch",
+        0x02 => "lead",
+        0x03 => "brit",
+        0x04 => "modern",
+        0x05 => "bass",
+        0x06 => "aco",
+        0x07 => "flat",
+        _ => ""
+    }
+}
+
 pub fn get_knob(name: &str) -> u8 {
     match name {
         "amplifier"        => 0x00,
@@ -132,6 +146,18 @@ pub fn get_cabinet(name: &str) -> u16 {
         "cab1x12" => 0x04,
         "cab4x10" => 0x05,
         _ => 0x00
+    }
+}
+
+pub fn rev_cabinet(value: u8) -> &'static str {
+    match value {
+        0x00 => "usa4x12",
+        0x01 => "usa2x12",
+        0x02 => "brit4x12",
+        0x03 => "brit2x12",
+        0x04 => "cab1x12",
+        0x05 => "cab4x10",
+        _ => ""
     }
 }
 
