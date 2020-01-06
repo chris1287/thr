@@ -75,6 +75,54 @@ pub fn get_knob(name: &str) -> u8 {
     }
 }
 
+pub fn rev_knob(value: u8) -> &'static str {
+    match value {
+        0x00 => "amplifier",
+        0x01 => "gain",
+        0x02 => "master",
+        0x03 => "bass",
+        0x04 => "middle",
+        0x05 => "treble",
+        0x06 => "cabinet",
+        0x5F => "gate",
+        0x51 => "gate-thr",
+        0x52 => "gate-rel",
+        0x1F => "compressor",
+        0x10 => "comp-type",
+        0x11 => "stomp-sus",
+        0x12 => "stomp-out",
+        0x13 => "rack-att",
+        0x14 => "rack-rel",
+        0x15 => "rack-ratio",
+        0x16 => "rack-knee",
+        0x17 => "rack-out",
+        0x2F => "modulation",
+        0x20 => "mod-select",
+        0x21 => "chorus-speed",
+        0x22 => "chorus-depth",
+        0x23 => "chorus-mix",
+        0x24 => "flanger-feedback",
+        0x25 => "flanger-spread",
+        0x3F => "delay",
+        0x31 => "delay-time",
+        0x33 => "delay-feedback",
+        0x34 => "delay-hcut",
+        0x36 => "delay-lcut",
+        0x38 => "delay-level",
+        0x4F => "reverb",
+        0x40 => "reverb-type",
+        0x41 => "reverb-time",
+        0x43 => "reverb-pre",
+        0x45 => "reverb-lcut",
+        0x47 => "reverb-hcut",
+        0x49 => "reverb-hratio",
+        0x4A => "reverb-lratio",
+        0x4B => "reverb-level",
+        0x42 => "spring-filter",
+        _ => ""
+    }
+}
+
 pub fn get_cabinet(name: &str) -> u16 {
     match name {
         "usa4x12" => 0x00,

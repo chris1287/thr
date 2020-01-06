@@ -77,6 +77,7 @@ fn get_opts() -> getopts::Options {
     opts.optflag("" , "dryrun"           , "do not send sysex to device");
     opts.optopt(""  , "select"           , "select raw midi controller"             , "[hw:?,?,?]");
     opts.optopt(""  , "file"             , "load file"                              , "[file name]");
+    opts.optflag("" , "monitor"          , "monitor THR activity");
 
     for o in OPTIONS {
         opts.optopt(o.short, o.long, o.description, o.domain);
@@ -112,6 +113,13 @@ fn main() {
             };
 
             let dry = matches.opt_present("dryrun");
+
+            if matches.opt_present("monitor") {
+                match thr::main_loop::start(device_name.as_ref()) {
+                    Ok(_) => println!("main loop end"),
+                    Err(e) => println!("main loop error: {}", e)
+                };
+            }
 
             let cmd = matches.opt_str("file"); 
             match cmd {
