@@ -1,9 +1,7 @@
 extern crate getopts;
 extern crate thr;
 
-use thr::getters::*;
-use thr::sysex::*;
-use thr::ydp_interaction::*;
+use thr::*;
 
 struct Option {
     pub short: &'static str,
@@ -115,7 +113,7 @@ fn main() {
             let dry = matches.opt_present("dryrun");
 
             if matches.opt_present("monitor") {
-                match thr::main_loop::start(device_name.as_ref()) {
+                match start(device_name.as_ref()) {
                     Ok(_) => {},
                     Err(_) => {}
                 };
